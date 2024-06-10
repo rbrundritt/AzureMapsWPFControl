@@ -71,7 +71,7 @@ MIT
 This is one solution for those using the Bing Maps WPF SDK. There are two other common alternative solutions.
 
 1. Use the Azure Maps Web SDK in a `WebView` control. This requires using a combination of c# and JavaScript code, but provides you with a very rich set of map capabilities.
-2. Use a 3rd part or open-source native map control for WPF. Here are few:
+2. Use a 3rd party (commerical) or open-source native map control for WPF. Here are few:
    - [Maps UI](https://github.com/Mapsui/Mapsui) – Fairly popular open source Native Map SDK.
    - [MapLibre Native](https://github.com/maplibre/maplibre-native) – MapLibre is the underlying rendering engine of the Azure Maps Web SDK and also the recommended control to use for iOS and Android so this is a good option to consider. Until recently there wasn’t much work around Windows but it looks like this has changed. Microsoft is a sponsor of the MapLibre community.
    - [XAML Map Control](https://github.com/ClemensFischer/XAML-Map-Control) – I just came across this one and it appears to have some API interface alignment with the UWP map control. I don’t know much about it, but worth a look.
