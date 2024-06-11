@@ -16,10 +16,10 @@ Current Render service version used by this solution: `2022-08-01`
 
 ## Supported features
 
-- Localization support. Most of the culture codes by Bing Maps work directly with Azure Maps. This solution is passes the culture code as is to Azure Maps and relies on it to determine how to fallback. As Azure Maps adds support for additional culture codes, this solution will automatically improve with it.
-- Copyright support. To align with the terms of service, this solution dynamically updates the copyrights displayed in the bottom right corner of the map as required. 
-- Bing logo removed. Azure Maps terms of use do not require a logo to be displayed, and there is no need for a Bing logo when using Azure Maps data, so this solution removes it help keep the map a bit cleaner.
-- Support for multiple maps instances. Load two or more maps, with different cultures without any issues. 
+- **Localization support** - Most of the culture codes by Bing Maps work directly with Azure Maps. This solution is passes the culture code as is to Azure Maps and relies on it to determine how to fallback. As Azure Maps adds support for additional culture codes, this solution will automatically improve with it.
+- **Copyright support** - To align with the terms of service, this solution dynamically updates the copyrights displayed in the bottom right corner of the map as required. 
+- **Bing logo removed** - Azure Maps terms of use do not require a logo to be displayed, and there is no need for a Bing logo when using Azure Maps data, so this solution removes it help keep the map a bit cleaner.
+- **Support for multiple maps instances** - Load two or more maps, with different cultures without any issues. 
 
 ## How to use this in your app
 

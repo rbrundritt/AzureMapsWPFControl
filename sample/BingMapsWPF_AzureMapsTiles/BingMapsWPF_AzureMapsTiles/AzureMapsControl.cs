@@ -19,6 +19,8 @@ namespace Azure.Maps.WPF
     /// </summary>
     public partial class AzureMapsControl: Map
     {
+        internal const string RenderServiceAPIVersion = "2022-08-01";
+
         private const string AerialLabelTilesetId = "microsoft.base.hybrid.road";
         private static bool CultureDependancyCallbackSet = false;
         private string AzureMapsKey = string.Empty;
@@ -325,13 +327,13 @@ namespace Azure.Maps.WPF
                 var bounds = string.Format("{0:0.#####},{1:0.#####},{2:0.#####},{3:0.#####}", this.BoundingRectangle.West, this.BoundingRectangle.South, this.BoundingRectangle.East, this.BoundingRectangle.North);
 
                 //Get attributions for the base map style.
-                var basemapAttributes = await SharedAttributesClient.GetStringAsync($"/map/attribution?api-version=2022-08-01&tilesetId={LastSetAzureMapsTilesetId}&zoom={zoom}&bounds={bounds}&subscription-key={AzureMapsKey}");
+                var basemapAttributes = await SharedAttributesClient.GetStringAsync($"/map/attribution?api-version={RenderServiceAPIVersion}&tilesetId={LastSetAzureMapsTilesetId}&zoom={zoom}&bounds={bounds}&subscription-key={AzureMapsKey}");
                 AddCopyrightAttributes(basemapAttributes);
 
                 //If labels are shown with aerial imagery, get attributions for the label style.
                 if (AerialLabelsShown)
                 {
-                    var labelsAttributes = await SharedAttributesClient.GetStringAsync($"/map/attribution?api-version=2022-08-01&tilesetId={AerialLabelTilesetId}&zoom={zoom}&bounds={bounds}&subscription-key={AzureMapsKey}");
+                    var labelsAttributes = await SharedAttributesClient.GetStringAsync($"/map/attribution?api-version={RenderServiceAPIVersion}&tilesetId={AerialLabelTilesetId}&zoom={zoom}&bounds={bounds}&subscription-key={AzureMapsKey}");
                     AddCopyrightAttributes(labelsAttributes);
                 }
             }
@@ -371,7 +373,7 @@ namespace Azure.Maps.WPF
     /// </summary>
     public class AzureMapsTileSource : TileSource
     {
-        private const string AzureMapsTileUrl = "https://atlas.microsoft.com/map/tile?api-version=2022-08-01&tilesetId={tilesetId}&zoom={z}&x={x}&y={y}&subscription-key={AzureMapsKey}&view=Auto&tileSize=256&language={language}";
+        private const string AzureMapsTileUrl = "https://atlas.microsoft.com/map/tile?api-version=" + AzureMapsControl.RenderServiceAPIVersion + "&tilesetId={tilesetId}&zoom={z}&x={x}&y={y}&subscription-key={AzureMapsKey}&view=Auto&tileSize=256&language={language}";
         private string AzureMapsKey = string.Empty;
 
         public AzureMapsTileSource(string azureMapsKey, string tilesetId, string cultureCode = "en-US")
