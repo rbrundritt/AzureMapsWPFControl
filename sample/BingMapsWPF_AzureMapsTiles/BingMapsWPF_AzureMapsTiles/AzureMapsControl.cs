@@ -19,7 +19,7 @@ namespace Azure.Maps.WPF
     /// </summary>
     public partial class AzureMapsControl: Map
     {
-        internal const string RenderServiceAPIVersion = "2022-08-01";
+        internal const string RenderServiceAPIVersion = "2024-04-01";
 
         private const string AerialLabelTilesetId = "microsoft.base.hybrid.road";
         private static bool CultureDependancyCallbackSet = false;
@@ -38,8 +38,10 @@ namespace Azure.Maps.WPF
 
         private static HttpClient SharedAttributesClient = new HttpClient()
         {
-            BaseAddress = new Uri("https://atlas.microsoft.com"),
+            BaseAddress = new Uri("https://atlas.microsoft.com")
         };
+
+        private static bool ClientHeadersAdded = false;
 
         /// <summary>
         /// An Azure Maps powered version of the Bing Maps WPF control.
@@ -63,6 +65,14 @@ namespace Azure.Maps.WPF
                 MapCore.CultureProperty.OverrideMetadata(typeof(AzureMapsControl), new FrameworkPropertyMetadata(new PropertyChangedCallback(OnCulturePropertyChanged)));
                 CultureDependancyCallbackSet = true;
             }
+
+            //Add headers to the shared http client.
+            if (!ClientHeadersAdded)
+            {
+                SharedAttributesClient.DefaultRequestHeaders.Add("Ms-Am-Request-Origin", "MapControl");
+                SharedAttributesClient.DefaultRequestHeaders.Add("Map-Agent", $"MapControl/{RenderServiceAPIVersion} (WPF)");
+                ClientHeadersAdded = true;
+            }
         }
 
         /// <summary>
@@ -75,7 +85,7 @@ namespace Azure.Maps.WPF
             var map = (d as AzureMapsControl);
             if(map != null)
             {
-                map.ConvertMapMode(); 
+                map.ConvertMapMode().Wait(); 
             }
         }
 
@@ -318,23 +328,35 @@ namespace Azure.Maps.WPF
         {
             if (CopyrightAttributes != null)
             {
-                CopyrightAttributes.Clear();
-                CopyrightAttributes.Add("© " + DateTime.Now.Year.ToString() + " Microsoft");
-
                 //https://atlas.microsoft.com/map/attribution?api-version=2022-08-01&tilesetId={tilesetId}&zoom={zoom}&bounds={bounds}
 
                 var zoom = Math.Round(this.ZoomLevel);
                 var bounds = string.Format("{0:0.#####},{1:0.#####},{2:0.#####},{3:0.#####}", this.BoundingRectangle.West, this.BoundingRectangle.South, this.BoundingRectangle.East, this.BoundingRectangle.North);
+                
+                var msftAttribute = "© " + DateTime.Now.Year.ToString() + " Microsoft";
+                var attributes = new List<string>() { msftAttribute };
 
                 //Get attributions for the base map style.
                 var basemapAttributes = await SharedAttributesClient.GetStringAsync($"/map/attribution?api-version={RenderServiceAPIVersion}&tilesetId={LastSetAzureMapsTilesetId}&zoom={zoom}&bounds={bounds}&subscription-key={AzureMapsKey}");
-                AddCopyrightAttributes(basemapAttributes);
+                AddCopyrightAttributes(basemapAttributes, attributes);
 
                 //If labels are shown with aerial imagery, get attributions for the label style.
                 if (AerialLabelsShown)
                 {
                     var labelsAttributes = await SharedAttributesClient.GetStringAsync($"/map/attribution?api-version={RenderServiceAPIVersion}&tilesetId={AerialLabelTilesetId}&zoom={zoom}&bounds={bounds}&subscription-key={AzureMapsKey}");
-                    AddCopyrightAttributes(labelsAttributes);
+                    AddCopyrightAttributes(labelsAttributes, attributes);
+                }
+
+                //Check to see if the attributes are the same as those already in the Copyright attributes container.
+                //If they are, do nothing as no need to update the UI. 
+                if (!attributes.SequenceEqual(CopyrightAttributes))
+                {
+                    CopyrightAttributes.Clear();
+
+                    foreach(var attribute in attributes)
+                    {
+                        CopyrightAttributes.Add(attribute);
+                    }
                 }
             }
         }
@@ -344,7 +366,7 @@ namespace Azure.Maps.WPF
         /// </summary>
         /// <param name="response"></param>
         /// <param name="attributeContainer"></param>
-        private void AddCopyrightAttributes(string response)
+        private void AddCopyrightAttributes(string response, List<string> attributeContainer)
         {
             if (!string.IsNullOrWhiteSpace(response))
             {
@@ -360,7 +382,14 @@ namespace Azure.Maps.WPF
                     {
                         foreach (var a in attributions)
                         {
-                            CopyrightAttributes.Add(a.ToString());
+                            if (a != null)
+                            {
+                                var val = a.ToString();
+                                if (!string.IsNullOrWhiteSpace(val) && !attributeContainer.Contains(val))
+                                {
+                                    attributeContainer.Add(a.ToString());
+                                }
+                            }
                         }
                     }
                 }

@@ -12,7 +12,7 @@ This is a hack! It does several undocumented things with the Bing Maps WPF contr
 
 Additionally, this solution has hardcoded URLs to specific versions of the Azure Maps services. Versions may increase over time, and the code may need to be updated accordingly to keep working. Azure Maps will likely send an email notice if you are using an older version of a service that needs to be updated. This solutions uses the `Map tile` and `Map Attribution` services of the [Azure Maps REST Render services](https://learn.microsoft.com/en-us/rest/api/maps/render).
 
-Current Render service version used by this solution: `2022-08-01`
+Current Render service version used by this solution: `2024-04-01`
 
 ## Supported features
 
