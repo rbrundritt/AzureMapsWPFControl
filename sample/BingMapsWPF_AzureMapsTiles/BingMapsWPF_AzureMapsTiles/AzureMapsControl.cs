@@ -7,6 +7,7 @@
 using Microsoft.Maps.MapControl.WPF;
 using Microsoft.Maps.MapControl.WPF.Overlays;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Windows;
@@ -330,8 +331,8 @@ namespace Azure.Maps.WPF
             {
                 //https://atlas.microsoft.com/map/attribution?api-version=2022-08-01&tilesetId={tilesetId}&zoom={zoom}&bounds={bounds}
 
-                var zoom = Math.Round(this.ZoomLevel);
-                var bounds = string.Format("{0:0.#####},{1:0.#####},{2:0.#####},{3:0.#####}", this.BoundingRectangle.West, this.BoundingRectangle.South, this.BoundingRectangle.East, this.BoundingRectangle.North);
+                var zoom = (int)Math.Round(this.ZoomLevel);
+                var bounds = string.Format(CultureInfo.InvariantCulture, "{0:0.#####},{1:0.#####},{2:0.#####},{3:0.#####}", this.BoundingRectangle.West, this.BoundingRectangle.South, this.BoundingRectangle.East, this.BoundingRectangle.North);
                 
                 var msftAttribute = "© " + DateTime.Now.Year.ToString() + " Microsoft";
                 var attributes = new List<string>() { msftAttribute };
