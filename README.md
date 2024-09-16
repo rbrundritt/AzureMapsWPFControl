@@ -1,6 +1,6 @@
 # Azure Maps WPF Control
 
-On May 29th, 22024 Microsoft announced that the [Bing Maps for Enterprise platform would be retiring](https://www.microsoft.com/en-us/maps/bing-maps/discontinued-services), and recommended moving to Azure Maps. 
+On May 29th, 2024 Microsoft announced that the [Bing Maps for Enterprise platform would be retiring](https://www.microsoft.com/en-us/maps/bing-maps/discontinued-services), and recommended moving to Azure Maps. 
 
 The Bing Maps WPF SDK was actually deprecated many years ago, however, since it used the same production services of Bing Maps as their Web SDK, it continued to work. The original download page for the SDK is long gone (links in the docs are dead), but their is a NuGet package still around that was last updated in 2015. Because of this, there are still some apps out there using the Bing Maps WPF SDK. 
 
